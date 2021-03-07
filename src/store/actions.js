@@ -5,4 +5,21 @@ export const addTracker = (title, createdAt) => ({
     payload: { title, createdAt },
 });
 
-export default { addTracker };
+export const removeTracker = (id) => ({
+    type: types.REMOVE_TRACKER,
+    payload: { id },
+});
+
+export const toggleActiveTracker = (id) => ({
+    type: types.TOGGLE_ACTIVE,
+    payload: { id },
+});
+
+export const updateTime = () => ({ type: types.UPDATE_TIME });
+
+export default {
+    addTracker,
+    removeTracker,
+    toggleActiveTracker,
+    updateTime,
+};

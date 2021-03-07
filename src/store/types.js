@@ -1,1 +1,4 @@
 export const ADD_TRACKER = 'ADD_TRACKER';
+export const REMOVE_TRACKER = 'REMOVE_TRACKER';
+export const TOGGLE_ACTIVE = 'TOGGLE_ACTIVE';
+export const UPDATE_TIME = 'UPDATE_TIME';
