@@ -11,8 +11,8 @@ function App() {
     const updateTime = () => dispatch(actions.updateTime());
     const addTracker = (title) => dispatch(actions.addTracker(title));
     const removeTracker = (id) => dispatch(actions.removeTracker(id));
-    const toggleActiveTracker = (id, isActive) =>
-        dispatch(actions.toggleActiveTracker(id, isActive));
+    const toggleActiveTracker = (id) =>
+        dispatch(actions.toggleActiveTracker(id));
 
     const items = useSelector(selectItems);
 
@@ -21,15 +21,21 @@ function App() {
     const handleClickToggle = (id) => toggleActiveTracker(id);
 
     useEffect(() => {
-        const intervalId = setInterval(
-            () => items.some((item) => item.isActive) && updateTime(),
-            1000,
-        );
+        let time = Date.now();
 
-        return () => clearInterval(intervalId);
-    });
+        const requestID = requestAnimationFrame(function timerTick() {
+            const now = Date.now();
 
-    console.log(items);
+            if (now - time > 1000) {
+                time = now;
+                updateTime();
+            }
+
+            requestAnimationFrame(timerTick);
+        });
+
+        return () => cancelAnimationFrame(requestID);
+    }, []);
 
     return (
         <main>

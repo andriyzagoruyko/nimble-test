@@ -56,23 +56,19 @@ function trackersReducer(state = initialState, action) {
         }
 
         case types.UPDATE_TIME: {
-            const activeItems = Object.values(state.items).filter(
-                (item) => item.isActive,
-            );
+            const items = Object.values(state.items).map((item) => {
+                if (item.isActive) {
+                    const seconds = item.seconds + 1;
+                    const time = moment
+                        .duration(seconds, 'seconds')
+                        .format('hh:mm:ss', {
+                            trim: false,
+                        });
 
-            if (!activeItems.length) {
-                return state;
-            }
+                    return { ...item, seconds, time };
+                }
 
-            const items = activeItems.map((item) => {
-                const seconds = item.seconds + 1;
-                const time = moment
-                    .duration(seconds, 'seconds')
-                    .format('hh:mm:ss', {
-                        trim: false,
-                    });
-
-                return { ...item, seconds, time };
+                return item;
             });
 
             return { ...state, items };
