@@ -32,10 +32,7 @@ module.exports = (env, options) => {
                         {
                             loader: 'css-loader',
                             options: {
-                                modules: {
-                                    localIdentName:
-                                        '[local]__[sha1:hash:hex:7]',
-                                },
+                                modules: true,
                                 sourceMap: isDevelopment,
                             },
                         },
@@ -69,16 +66,7 @@ module.exports = (env, options) => {
                 },
             ],
         },
-        plugins: [
-            new MiniCssExtractPlugin({
-                filename: isDevelopment
-                    ? '[name].css'
-                    : '[name].[hash].css',
-                chunkFilename: isDevelopment
-                    ? '[id].css'
-                    : '[id].[hash].css',
-            }),
-        ],
+        plugins: [new MiniCssExtractPlugin({ filename: 'app.css' })],
 
         resolve: {
             extensions: ['.js', '.jsx', '.scss'],
