@@ -10,7 +10,7 @@ export const removeTracker = (id) => ({
     payload: { id },
 });
 
-export const toggleActiveTracker = (id) => ({
+export const toggleTracker = (id) => ({
     type: types.TOGGLE_ACTIVE,
     payload: { id },
 });
@@ -20,6 +20,6 @@ export const updateTime = () => ({ type: types.UPDATE_TIME });
 export default {
     addTracker,
     removeTracker,
-    toggleActiveTracker,
+    toggleTracker,
     updateTime,
 };

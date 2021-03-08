@@ -1,20 +1,21 @@
-import * as types from './types';
-
 import moment from 'moment';
-
 import 'moment-duration-format';
+import * as types from './types';
 
 const initialState = {
     items: {},
 };
 
 function trackersReducer(state = initialState, action) {
+    const { payload } = action;
+
     switch (action.type) {
         case types.ADD_TRACKER: {
-            const {
-                id = Object.keys(state.items).length,
-                title,
-            } = action.payload;
+            const id = Object.keys(state.items).length;
+            const updatedAt = Date.now();
+            const title = !payload.title
+                ? moment(updatedAt).format('MM/DD/YYYY hh:mm')
+                : payload.title;
 
             return {
                 ...state,
@@ -23,9 +24,9 @@ function trackersReducer(state = initialState, action) {
                     [id]: {
                         id,
                         title,
+                        updatedAt,
                         time: '00:00:00',
                         seconds: 0,
-                        timestamp: Date.now(),
                         isActive: true,
                     },
                 },
@@ -34,17 +35,16 @@ function trackersReducer(state = initialState, action) {
 
         case types.REMOVE_TRACKER: {
             const items = Object.values(state.items).filter(
-                (item) => item.id !== action.payload.id,
+                (item) => item.id !== payload.id,
             );
 
             return { ...state, items };
         }
 
         case types.TOGGLE_ACTIVE: {
-            const { id } = action.payload;
+            const { id } = payload;
             const item = state.items[id];
             const isActive = !item.isActive;
-            const timestamp = isActive ? Date.now() : item.timestamp;
 
             return {
                 ...state,
@@ -58,14 +58,13 @@ function trackersReducer(state = initialState, action) {
         case types.UPDATE_TIME: {
             const items = Object.values(state.items).map((item) => {
                 if (item.isActive) {
+                    const updatedAt = Date.now();
                     const seconds = item.seconds + 1;
                     const time = moment
                         .duration(seconds, 'seconds')
-                        .format('hh:mm:ss', {
-                            trim: false,
-                        });
+                        .format('hh:mm:ss', { trim: false });
 
-                    return { ...item, seconds, time };
+                    return { ...item, seconds, time, updatedAt };
                 }
 
                 return item;

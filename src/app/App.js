@@ -1,41 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import actions from '../store/actions';
 
-const selectItems = (state) => Object.values(state.items);
+import moment from 'moment';
+import 'moment-duration-format';
+
+import useTimer from '../hooks/useTimer';
+import actions from '../store/actions';
 
 function App() {
     const [title, setTitle] = useState('');
-
     const dispatch = useDispatch();
+
     const updateTime = () => dispatch(actions.updateTime());
     const addTracker = (title) => dispatch(actions.addTracker(title));
     const removeTracker = (id) => dispatch(actions.removeTracker(id));
-    const toggleActiveTracker = (id) =>
-        dispatch(actions.toggleActiveTracker(id));
+    const toggleTracker = (id) => dispatch(actions.toggleTracker(id));
 
-    const items = useSelector(selectItems);
+    const items = useSelector((state) => Object.values(state.items));
 
     const handleClickAdd = () => addTracker(title);
     const handleClickRemove = (id) => removeTracker(id);
-    const handleClickToggle = (id) => toggleActiveTracker(id);
+    const handleClickToggle = (id) => toggleTracker(id);
 
-    useEffect(() => {
-        let time = Date.now();
-
-        const requestID = requestAnimationFrame(function timerTick() {
-            const now = Date.now();
-
-            if (now - time > 1000) {
-                time = now;
-                updateTime();
-            }
-
-            requestAnimationFrame(timerTick);
-        });
-
-        return () => cancelAnimationFrame(requestID);
-    }, []);
+    useTimer(() => updateTime());
 
     return (
         <main>
