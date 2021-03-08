@@ -4,7 +4,7 @@ import { createTransform } from 'redux-persist';
 const TimeTransform = createTransform(
     (inboundState) => inboundState,
     (outboundState) => {
-        return Object.values(outboundState).map((item) => {
+        return outboundState.map((item) => {
             if (item.isActive) {
                 const seconds = moment(Date.now())
                     .add(item.seconds, 'seconds')

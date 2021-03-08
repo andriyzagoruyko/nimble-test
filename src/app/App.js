@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import moment from 'moment';
-import 'moment-duration-format';
-
 import useTimer from '../hooks/useTimer';
 import actions from '../store/actions';
+import Tracker from '../components/Tracker/Tracker';
+import s from './App.module.scss';
+import Logo from '../components/Logo/Logo';
+import IconPlay from '../assets/play-filled.svg';
 
 function App() {
     const [title, setTitle] = useState('');
@@ -16,41 +16,44 @@ function App() {
     const removeTracker = (id) => dispatch(actions.removeTracker(id));
     const toggleTracker = (id) => dispatch(actions.toggleTracker(id));
 
-    const items = useSelector((state) => Object.values(state.items));
+    const items = useSelector((state) => state.items);
 
-    const handleClickAdd = () => addTracker(title);
     const handleClickRemove = (id) => removeTracker(id);
     const handleClickToggle = (id) => toggleTracker(id);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        addTracker(title);
+    };
 
     useTimer(() => updateTime());
 
     return (
-        <main>
-            <div>
+        <main className={s.container}>
+            <Logo />
+            <form
+                action="#"
+                className={s.form}
+                onSubmit={handleSubmit}
+            >
                 <input
                     type="text"
+                    placeholder="Enter tracker name"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                 />
-                <button onClick={handleClickAdd}>Add</button>
-            </div>
-
-            <div>
+                <button type="submit">
+                    <IconPlay />
+                </button>
+            </form>
+            <div className={s.trackers}>
                 {items.map((item) => (
-                    <div key={item.id}>
-                        <span>{item.title}</span>
-                        <span>{item.time}</span>
-                        <button
-                            onClick={() => handleClickToggle(item.id)}
-                        >
-                            Pause
-                        </button>
-                        <button
-                            onClick={() => handleClickRemove(item.id)}
-                        >
-                            Remove
-                        </button>
-                    </div>
+                    <Tracker
+                        key={item.id}
+                        item={item}
+                        onToggle={handleClickToggle}
+                        onRemove={handleClickRemove}
+                    />
                 ))}
             </div>
         </main>

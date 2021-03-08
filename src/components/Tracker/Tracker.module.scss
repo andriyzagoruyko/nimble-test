@@ -1,0 +1,32 @@
+.tracker {
+  display: flex;
+  font-weight: bold;
+  padding: 20px 15px;
+  border-top: solid 1px #EDEDED;
+
+  &.active {
+    background: #FDFDF6;
+    color: #4BB374;
+  }
+}
+
+.title {
+  word-break: break-word;
+  flex: 1 1 auto;
+}
+
+.time {
+  margin-left: 15px;
+}
+
+.actions {
+  margin-left: 20px;
+  flex-shrink: 0;
+
+  button {
+    margin-left: 13px;
+    padding: 0;
+    background: transparent;
+    border: none;
+  }
+}

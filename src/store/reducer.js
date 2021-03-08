@@ -3,7 +3,7 @@ import 'moment-duration-format';
 import * as types from './types';
 
 const initialState = {
-    items: {},
+    items: [],
 };
 
 function trackersReducer(state = initialState, action) {
@@ -11,7 +11,7 @@ function trackersReducer(state = initialState, action) {
 
     switch (action.type) {
         case types.ADD_TRACKER: {
-            const id = Object.keys(state.items).length;
+            const id = state.items.length;
             const updatedAt = Date.now();
             const title = !payload.title
                 ? moment(updatedAt).format('MM/DD/YYYY hh:mm')
@@ -19,9 +19,9 @@ function trackersReducer(state = initialState, action) {
 
             return {
                 ...state,
-                items: {
+                items: [
                     ...state.items,
-                    [id]: {
+                    {
                         id,
                         title,
                         updatedAt,
@@ -29,12 +29,12 @@ function trackersReducer(state = initialState, action) {
                         seconds: 0,
                         isActive: true,
                     },
-                },
+                ],
             };
         }
 
         case types.REMOVE_TRACKER: {
-            const items = Object.values(state.items).filter(
+            const items = state.items.filter(
                 (item) => item.id !== payload.id,
             );
 
@@ -42,21 +42,18 @@ function trackersReducer(state = initialState, action) {
         }
 
         case types.TOGGLE_ACTIVE: {
-            const { id } = payload;
-            const item = state.items[id];
-            const isActive = !item.isActive;
-
             return {
                 ...state,
-                items: {
-                    ...state.items,
-                    [id]: { ...item, timestamp, isActive },
-                },
+                items: state.items.map((item) =>
+                    item.id === payload.id
+                        ? { ...item, isActive: !item.isActive }
+                        : item,
+                ),
             };
         }
 
         case types.UPDATE_TIME: {
-            const items = Object.values(state.items).map((item) => {
+            const items = state.items.map((item) => {
                 if (item.isActive) {
                     const updatedAt = Date.now();
                     const seconds = item.seconds + 1;
